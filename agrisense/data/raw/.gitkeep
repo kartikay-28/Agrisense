@@ -1,0 +1,2 @@
+# This file ensures the directory structure is tracked by git
+# Add your raw CSV/data files here (they will be ignored by .gitignore)
