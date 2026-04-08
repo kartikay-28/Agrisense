@@ -1,5 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# =====================================================
+# FRONTEND (Next.js) PATTERNS
+# =====================================================
+
 # dependencies
 /node_modules
 /.pnp
@@ -32,6 +36,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+!.env.local.example
 
 # vercel
 .vercel
@@ -39,3 +45,239 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# =====================================================
+# PYTHON DATA SCIENCE PATTERNS
+# =====================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+.jupyter_cache
+*.ipynb
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv & poetry
+Pipfile.lock
+poetry.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# =====================================================
+# DATA & MODELS (Local-only, DO NOT COMMIT)
+# =====================================================
+
+# Raw data files
+data/raw/*.csv
+data/raw/*.xlsx
+data/raw/*.xls
+data/raw/*.json
+data/raw/*.parquet
+data/raw/*.pkl
+data/raw/*.pickle
+
+# Processed data
+data/processed/*.csv
+data/processed/*.parquet
+data/processed/*.pkl
+data/processed/*.json
+
+# External data
+data/external/*.csv
+data/external/*.xlsx
+data/external/*.json
+
+# Models & checkpoints
+outputs/models/*.pkl
+outputs/models/*.joblib
+outputs/models/*.h5
+outputs/models/*.pt
+outputs/models/*.pth
+outputs/models/*.model
+outputs/models/*.onnx
+
+# Predictions & Results
+outputs/predictions/*.csv
+outputs/predictions/*.json
+outputs/predictions/*.xlsx
+
+# Figures & Charts
+outputs/figures/*.png
+outputs/figures/*.jpg
+outputs/figures/*.pdf
+outputs/figures/*.svg
+
+# =====================================================
+# IDE & EDITOR SPECIFIC
+# =====================================================
+
+# VSCode
+.vscode/
+.vscode/*.json
+!.vscode/settings.json.example
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+*.swp
+*.swo
+*~
+.vim/
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Visual Studio Code
+.code-workspace
+
+# =====================================================
+# OS SPECIFIC
+# =====================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.lnk
+
+# Linux
+.directory
+
+# =====================================================
+# TEMPORARY & MISC
+# =====================================================
+
+# Log files
+*.log
+logs/
+*.log.*
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+*~.lock
+
+# Cache directories
+.cache/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+
+# Local configuration
+config_local.py
+settings_local.py
+.env.local
+
+# Test artifacts
+test_data/
+temp/
+tmp/
+
+# OS lock files
+.lock
+*.lock
