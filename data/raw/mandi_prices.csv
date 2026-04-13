@@ -1,0 +1,41 @@
+date,commodity,modal_price,market,state
+2024-01-01,Wheat,2400,Shimla Mandi,Himachal Pradesh
+2024-01-01,Rice,3200,Chandigarh Mandi,Punjab
+2024-01-01,Tomato,1500,Delhi Mandi,Delhi
+2024-01-01,Potato,800,Bathinda Mandi,Punjab
+2024-01-01,Onion,1200,Nashik Mandi,Maharashtra
+2024-01-02,Wheat,2410,Shimla Mandi,Himachal Pradesh
+2024-01-02,Rice,3210,Chandigarh Mandi,Punjab
+2024-01-02,Tomato,1520,Delhi Mandi,Delhi
+2024-01-02,Potato,810,Bathinda Mandi,Punjab
+2024-01-02,Onion,1220,Nashik Mandi,Maharashtra
+2024-01-03,Wheat,2380,Shimla Mandi,Himachal Pradesh
+2024-01-03,Rice,3190,Chandigarh Mandi,Punjab
+2024-01-03,Tomato,1480,Delhi Mandi,Delhi
+2024-01-03,Potato,790,Bathinda Mandi,Punjab
+2024-01-03,Onion,1210,Nashik Mandi,Maharashtra
+2024-01-04,Wheat,2420,Shimla Mandi,Himachal Pradesh
+2024-01-04,Rice,3220,Chandigarh Mandi,Punjab
+2024-01-04,Tomato,1540,Delhi Mandi,Delhi
+2024-01-04,Potato,820,Bathinda Mandi,Punjab
+2024-01-04,Onion,1230,Nashik Mandi,Maharashtra
+2024-01-05,Wheat,2390,Shimla Mandi,Himachal Pradesh
+2024-01-05,Rice,3200,Chandigarh Mandi,Punjab
+2024-01-05,Tomato,1510,Delhi Mandi,Delhi
+2024-01-05,Potato,800,Bathinda Mandi,Punjab
+2024-01-05,Onion,1215,Nashik Mandi,Maharashtra
+2024-01-06,Wheat,2430,Shimla Mandi,Himachal Pradesh
+2024-01-06,Rice,3230,Chandigarh Mandi,Punjab
+2024-01-06,Tomato,1550,Delhi Mandi,Delhi
+2024-01-06,Potato,830,Bathinda Mandi,Punjab
+2024-01-06,Onion,1240,Nashik Mandi,Maharashtra
+2024-01-07,Wheat,2400,Shimla Mandi,Himachal Pradesh
+2024-01-07,Rice,3210,Chandigarh Mandi,Punjab
+2024-01-07,Tomato,1520,Delhi Mandi,Delhi
+2024-01-07,Potato,810,Bathinda Mandi,Punjab
+2024-01-07,Onion,1225,Nashik Mandi,Maharashtra
+2024-01-08,Wheat,2410,Shimla Mandi,Himachal Pradesh
+2024-01-08,Rice,3215,Chandigarh Mandi,Punjab
+2024-01-08,Tomato,1530,Delhi Mandi,Delhi
+2024-01-08,Potato,815,Bathinda Mandi,Punjab
+2024-01-08,Onion,1235,Nashik Mandi,Maharashtra
