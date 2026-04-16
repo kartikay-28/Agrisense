@@ -13,6 +13,7 @@ export default function NavigationBar() {
   const links = [
     { label: "Dashboard", href: "/dashboard" },
     { label: "Market", href: "/market" },
+    { label: "Mandi", href: "/mandi" },
     { label: "Climate", href: "/climate" },
     { label: "Yield", href: "/yield" },
     { label: "Advisor", href: "/advisor" },
