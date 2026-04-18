@@ -1,9 +1,16 @@
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers.market import router as market_router
 from routers.yield_router import router as yield_router
 from routers.climate import router as climate_router
 from routers.insight import router as insight_router
+
+# ------------------------------------------------------------------
+# Load Environment Variables from .env file
+# ------------------------------------------------------------------
+load_dotenv()
 
 # ==================================================================
 # AGRISENSE API - FASTAPI ENTRY POINT

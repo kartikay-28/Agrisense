@@ -1,9 +1,10 @@
 /**
  * Central API Client for AgriSense Platform
- * Communicates with FastAPI backend running on localhost:8000
+ * Communicates with FastAPI backend
  */
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+// Dynamically use the environment variable to ensure no hardcoded production paths!
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
 
 /**
  * Helper to handle fetch responses and throw structured errors
