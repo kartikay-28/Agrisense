@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers.market import router as market_router
+from routers.yield_router import router as yield_router
+from routers.climate import router as climate_router
+from routers.insight import router as insight_router
 
 # ==================================================================
 # AGRISENSE API - FASTAPI ENTRY POINT
@@ -32,6 +35,9 @@ app.add_middleware(
 # We inject all the routes from our 'routers' folder.
 # This keeps main.py clean and highly organized.
 app.include_router(market_router)
+app.include_router(yield_router)
+app.include_router(climate_router)
+app.include_router(insight_router)
 
 # ------------------------------------------------------------------
 # 3. Root Health Check Endpoint
