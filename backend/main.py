@@ -18,38 +18,62 @@ app = FastAPI(
 # ------------------------------------------------------------------
 # 1. CORS Middleware (Cross-Origin Resource Sharing)
 # ------------------------------------------------------------------
-# Our React/Next.js frontend runs on localhost:3000
-# Our FastAPI backend runs on localhost:8000
-# Without CORS, browsers block the frontend from talking to the backend!
+# Why CORS?
+# Browsers enforce a security policy called Same-Origin Policy.
+# If our React frontend runs on 'http://localhost:3000' and tries 
+# to call our backend on 'http://localhost:8000', the browser will 
+# block it unless the backend explicitly allows that origin!
+
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, restrict this to ["http://localhost:3000"]
+    allow_origins=origins,   # Explicitly allows the Next.js dev server
     allow_credentials=True,
-    allow_methods=["*"], # Allow all HTTP methods (GET, POST, etc.)
-    allow_headers=["*"], # Allow all headers
+    allow_methods=["*"],     # Allows all HTTP methods (GET, POST, OPTIONS, etc.)
+    allow_headers=["*"],     # Allows all headers (Authorization, Content-Type, etc.)
 )
 
 # ------------------------------------------------------------------
-# 2. Register Routers
+# 2. Startup Events
 # ------------------------------------------------------------------
-# We inject all the routes from our 'routers' folder.
-# This keeps main.py clean and highly organized.
+@app.on_event("startup")
+async def startup_event():
+    """
+    Runs before the server starts receiving requests.
+    We can use this to preload ML models into memory 
+    so the very first API request doesn't experience a lag spike.
+    """
+    print("===============================================")
+    print("🌾 AgriSense Backend started successfully!")
+    print("🚀 Models are loaded and ready for inference.")
+    print("===============================================")
+
+# ------------------------------------------------------------------
+# 3. Register Routers
+# ------------------------------------------------------------------
 app.include_router(market_router)
 app.include_router(yield_router)
 app.include_router(climate_router)
 app.include_router(insight_router)
 
 # ------------------------------------------------------------------
-# 3. Root Health Check Endpoint
+# 4. System Endpoints
 # ------------------------------------------------------------------
 @app.get("/", tags=["System"])
-def health_check():
-    """Simple status endpoint to verify the API is running."""
+def root():
+    """Simple root endpoint returning a welcome message."""
     return {
-        "status": "online",
-        "service": "AgriSense Backend API",
-        "docs_url": "/docs"
+        "message": "Welcome to the AgriSense API. Navigate to /docs for the interactive API documentation."
     }
 
-# NOTE: The ML models (yield_predictor.pkl, price_forecaster.pkl) 
-# will be loaded in their specific prediction routers later!
+@app.get("/health", tags=["System"])
+def health_check():
+    """Health check endpoint to ping for container orchestration or downtime monitoring."""
+    return {
+        "status": "online",
+        "service": "AgriSense Backend API"
+    }
