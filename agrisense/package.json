@@ -4,8 +4,8 @@
   "private": true,
   "description": "AgriSense Frontend Application",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint"
   },
@@ -24,6 +24,7 @@
     "@types/node": "^20.11.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "cross-env": "^10.1.0",
     "eslint": "^9.0.0",
     "eslint-config-next": "16.2.2",
     "tailwindcss": "^4.0.0",
