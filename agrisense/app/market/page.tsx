@@ -23,12 +23,22 @@ export default function MarketIntelligence() {
       setError(null);
       try {
         const res = await getMarketData(activeCrop);
-        // Map backend response or mock data
-        const data = res?.data && Array.isArray(res.data) ? res.data[0] : res;
-        setMarketData(data);
-      } catch (err) {
+        
+        // Check if response has data or error message
+        if (res?.message && res?.recent_prices?.length === 0) {
+          // No data found for this crop
+          setMarketData(null);
+          setError(res.message);
+        } else {
+          // Map backend response
+          const data = res?.data && Array.isArray(res.data) ? res.data[0] : res;
+          setMarketData(data);
+          setError(null);
+        }
+      } catch (err: any) {
         console.error(err);
-        setError("Failed to load market data for " + activeCrop);
+        setError(`Failed to load market data for ${activeCrop}. ${err?.message || ''}`);
+        setMarketData(null);
       } finally {
         setLoading(false);
       }

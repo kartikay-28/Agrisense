@@ -1,6 +1,7 @@
 import pandas as pd
 from pathlib import Path
 from fastapi import HTTPException
+from utils.crop_mapper import normalize_crop_name, find_canonical_crop, log_crop_search
 
 class DataService:
     """
@@ -29,24 +30,51 @@ class DataService:
     def get_market_data(self, crop: str, state: str = None, start_date: str = None, end_date: str = None) -> dict:
         """
         Main business logic for fetching, filtering, and shaping market data.
+        Now includes crop name normalization and graceful error handling.
         """
         self._load_data()
         
+        # Normalize and find canonical crop name
+        canonical_crop = find_canonical_crop(crop)
+        
         filtered = self.df.copy()
         
-        # 1. Filter by Crop (Required)
-        filtered = filtered[filtered['commodity'].str.lower() == crop.lower()]
+        # 1. Filter by Crop with normalized matching
+        filtered = filtered[filtered['commodity'].str.lower() == canonical_crop.lower()] if canonical_crop else pd.DataFrame()
         
+        log_crop_search(requested=crop, canonical=canonical_crop, found=len(filtered) > 0, count=len(filtered))
+        
+        # If no data found, return graceful empty response instead of throwing error
         if filtered.empty:
-            raise HTTPException(status_code=404, detail=f"Crop '{crop}' not found in the dataset.")
-            
+            return {
+                "crop_name": crop,
+                "current_price": 0,
+                "price_change_7d_percent": 0,
+                "rolling_avg_7d": 0,
+                "rolling_avg_30d": 0,
+                "volatility_7d": 0,
+                "recent_prices": [],
+                "last_updated": None,
+                "message": f"No records found for '{crop}' in the dataset."
+            }
+                
         # 2. Filter by State (Optional)
         if state:
             # Need to verify if 'state' column exists in our df, else ignore bounds
             if 'state' in filtered.columns:
                 filtered = filtered[filtered['state'].str.lower() == state.lower()]
                 if filtered.empty:
-                    raise HTTPException(status_code=404, detail=f"No data for '{crop}' in state '{state}'.")
+                    return {
+                        "crop_name": crop,
+                        "current_price": 0,
+                        "price_change_7d_percent": 0,
+                        "rolling_avg_7d": 0,
+                        "rolling_avg_30d": 0,
+                        "volatility_7d": 0,
+                        "recent_prices": [],
+                        "last_updated": None,
+                        "message": f"No data for '{crop}' in state '{state}'."
+                    }
                 
         # 3. Filter by Date Range (Optional)
         if start_date:
@@ -55,7 +83,17 @@ class DataService:
             filtered = filtered[filtered['date'] <= pd.to_datetime(end_date)]
             
         if filtered.empty:
-            raise HTTPException(status_code=404, detail="No data found for the specified date filters.")
+            return {
+                "crop_name": crop,
+                "current_price": 0,
+                "price_change_7d_percent": 0,
+                "rolling_avg_7d": 0,
+                "rolling_avg_30d": 0,
+                "volatility_7d": 0,
+                "recent_prices": [],
+                "last_updated": None,
+                "message": "No data found for the specified date filters."
+            }
             
         # Sort chronologically to safely pull the "latest" records
         filtered = filtered.sort_values(by='date')

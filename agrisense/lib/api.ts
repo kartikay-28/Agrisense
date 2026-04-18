@@ -4,7 +4,7 @@
  */
 
 // Dynamically use the environment variable to ensure no hardcoded production paths!
-const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
 
 /**
  * Helper to handle fetch responses and throw structured errors
@@ -24,11 +24,31 @@ async function fetchWithHandler(endpoint: string, options: RequestInit = {}) {
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.detail || `API request failed with status: ${response.status}`);
+      let errorMsg = `API request failed with status: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        if (errorData.detail) {
+          errorMsg = typeof errorData.detail === 'string' 
+            ? errorData.detail 
+            : JSON.stringify(errorData.detail);
+        }
+      } catch (parseErr) {
+        // Ignore JSON parse errors
+      }
+      
+      // Log but don't crash on 404/no data scenarios
+      if (response.status === 404) {
+        console.warn(`[API 404] ${endpoint}: ${errorMsg}`);
+        return { data: [], message: errorMsg };
+      }
+      
+      throw new Error(errorMsg);
     }
 
-    return await response.json();
+    const data = await response.json();
+    
+    // Normalize response format - some endpoints return data directly, others nest it
+    return data;
   } catch (error) {
     console.error(`API Error [${endpoint}]:`, error);
     throw error;

@@ -21,3 +21,6 @@ node_modules/
 # MacOS / Windows Artifacts
 .DS_Store
 Thumbs.db
+.env
+.env.local
+.env.production

@@ -5,10 +5,20 @@ class ClimateService:
     """
     Handles fetching weather data and running the logic for the Climate Risk Scorer.
     """
+    # Default location: Shimla, Himachal Pradesh (center of AgriSense operations)
+    DEFAULT_LAT = 31.1048
+    DEFAULT_LON = 77.1734
+    
     def __init__(self):
         self.api_key = os.getenv("OPENWEATHER_API_KEY")
 
-    def _fetch_weather(self, lat: float, lon: float):
+    def _fetch_weather(self, lat: float = None, lon: float = None):
+        # Use defaults if not provided
+        if lat is None:
+            lat = self.DEFAULT_LAT
+        if lon is None:
+            lon = self.DEFAULT_LON
+            
         # If no API key is provided, gracefully fallback to simulated weather anomalies
         if not self.api_key:
             return {
@@ -29,7 +39,13 @@ class ClimateService:
             "soil_moisture": random.randint(30, 80)
         }
 
-    def get_climate_risk(self, lat: float, lon: float, crop: str = None) -> dict:
+    def get_climate_risk(self, lat: float = None, lon: float = None, crop: str = None) -> dict:
+        # Use defaults if not provided
+        if lat is None:
+            lat = self.DEFAULT_LAT
+        if lon is None:
+            lon = self.DEFAULT_LON
+            
         weather = self._fetch_weather(lat, lon)
         
         rain_dev = weather["rain_deviation"]
