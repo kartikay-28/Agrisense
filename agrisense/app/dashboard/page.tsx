@@ -26,29 +26,37 @@ export default function Dashboard() {
         getClimateRisk(), // defaults to current location if params not passed
       ]);
 
-      // Handle typical FastAPI responses or mock fallbacks
-      const topMarketData =
-        marketRes?.data && Array.isArray(marketRes.data)
-          ? marketRes.data[0]
-          : marketRes;
+      // FastAPI returns the data directly as an object
+      const topMarketData = marketRes || {};
       setMarketData(topMarketData);
-      setClimateRisk(climateRes);
+      setClimateRisk(climateRes || {});
 
       // Fetch insight sequentially based on the retrieved data
-      const insightRes = await getLLMInsight({
-        market: topMarketData,
-        climate: climateRes,
-      });
+      if (topMarketData?.crop_name) {
+        try {
+          const insightRes = await getLLMInsight({
+            crop: topMarketData.crop_name,
+            predicted_yield: 45,
+            current_price: topMarketData.current_price || 2000,
+            climate_risk_level: climateRes?.risk_level || "Low",
+          });
 
-      // Usually `{ insight: "..." }` or `{ response: "..." }`
-      setAiInsight(
-        insightRes?.insight ||
-          insightRes?.response ||
-          "Insights are currently unavailable based on the latest data."
-      );
+          // Handle different response formats
+          setAiInsight(
+            insightRes?.insight_text ||
+              insightRes?.insight ||
+              insightRes?.response ||
+              "Insights are currently unavailable based on the latest data."
+          );
+        } catch (insightErr) {
+          console.warn("Failed to fetch AI insight:", insightErr);
+          setAiInsight("Insights are currently unavailable.");
+        }
+      }
     } catch (err: any) {
-      console.error(err);
-      setError("Failed to fetch dashboard data. Please check if your backend is running.");
+      const errorMsg = err?.message || "Failed to fetch dashboard data. Please check if your backend is running.";
+      setError(errorMsg);
+      console.error("Dashboard error:", err);
     } finally {
       setLoading(false);
     }

@@ -52,4 +52,31 @@ Write a helpful 2-paragraph insight and practical advice for the farmer.
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"LLM Error: {str(e)}")
 
+    async def chat(self, history: list, message: str) -> str:
+        """
+        Asynchronously handles conversational chat via the LLM API.
+        """
+        messages = [{"role": "system", "content": "You are a helpful, expert AI agricultural advisor. Provide concise, friendly answers."}]
+        for msg in history[-5:]: # Only keep last 5 for context limit and safety
+            if msg.role in ["user", "assistant"]:
+                messages.append({"role": msg.role, "content": msg.content})
+        
+        # In case the message isn't at the end of history yet
+        if not history or history[-1].content != message:
+            messages.append({"role": "user", "content": message})
+
+        if not self.client:
+            return "Namaste! I'm your AI assistant. You asked: '" + message + "'. Please add your GROQ API key to enable live chat!"
+
+        try:
+            response = await self.client.chat.completions.create(
+                model="llama3-8b-8192",
+                messages=messages,
+                temperature=0.7,
+                max_tokens=300
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"LLM Chat Error: {str(e)}")
+
 llm_service = LLMService()

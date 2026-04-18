@@ -6,6 +6,7 @@ from routers.market import router as market_router
 from routers.yield_router import router as yield_router
 from routers.climate import router as climate_router
 from routers.insight import router as insight_router
+from routers.chat import router as chat_router
 
 # ------------------------------------------------------------------
 # Load Environment Variables from .env file
@@ -66,6 +67,7 @@ app.include_router(market_router)
 app.include_router(yield_router)
 app.include_router(climate_router)
 app.include_router(insight_router)
+app.include_router(chat_router)
 
 # ------------------------------------------------------------------
 # 4. System Endpoints

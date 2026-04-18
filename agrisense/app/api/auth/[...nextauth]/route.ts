@@ -1,16 +1,18 @@
 import NextAuth from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
+import CredentialsProvider from 'next-auth/providers/credentials'
 
-export const authOptions = {
+const handler = NextAuth({
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-    })
+    CredentialsProvider({
+      name: 'Demo Login',
+      credentials: {},
+      async authorize() {
+        return { id: '1', name: 'Demo Farmer', email: 'farmer@agrisense.com' }
+      },
+    }),
   ],
-  pages: { signIn: '/' }
-}
-
-const handler = NextAuth(authOptions)
+  secret: process.env.NEXTAUTH_SECRET,
+  pages: { signIn: '/', error: '/' },
+})
 
 export { handler as GET, handler as POST }
