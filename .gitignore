@@ -1,5 +1,23 @@
-node_modules
-agrisense/node_modules
-agrisense/.next
-.next
-node_modules
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.class
+
+# Next.js
+.next/
+out/
+build/
+
+# Dependencies
+node_modules/
+
+# Environment Variables (NEVER COMMIT THESE ?)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# MacOS / Windows Artifacts
+.DS_Store
+Thumbs.db

@@ -1,20 +1,19 @@
 import os
 import asyncio
 from fastapi import HTTPException
-
-# For a production app, install openai via: pip install openai
-# import openai
+from groq import AsyncGroq
 
 class LLMService:
     """
-    Connects to AI APIs (like OpenAI GPT-4o-mini) to generate natural language advice.
+    Connects to the Groq API (using Llama3) to generate natural language advice at lightning speed.
     """
     def __init__(self):
-        self.api_key = os.getenv("OPENAI_API_KEY")
+        self.api_key = os.getenv("GROQ_API_KEY")
+        self.client = AsyncGroq(api_key=self.api_key) if self.api_key else None
 
     async def generate_insight(self, context_data: dict) -> str:
         """
-        Asynchronously calls the LLM with the provided context.
+        Asynchronously calls the Groq LLM with the provided context.
         """
         prompt = f"""
 You are an experienced agricultural advisor in Himachal Pradesh, India. 
@@ -28,32 +27,27 @@ Given this farmer data:
 Write a helpful 2-paragraph insight and practical advice for the farmer.
 """
         
-        if not self.api_key:
+        if not self.client:
             # Fallback if no API key is configured
             return (
                 f"Namaste! Looking at the data, the climate risk is {context_data.get('climate_risk_level')}. "
                 f"Your expected {context_data.get('crop')} yield is around {context_data.get('predicted_yield')} quintals per acre. "
                 f"With the current market price at ₹{context_data.get('current_price')}, it's a good time to plan your harvest strategy. \n\n"
-                "Advice: Ensure you follow the recommended irrigation schedule. Keep an eye on the market prices over the next two weeks to maximize your profits!"
+                "Advice: Ensure you follow the recommended irrigation schedule. Please add your Groq API key to the .env file to enable live AI insights!"
             )
             
         try:
-            # Real API call example (Requires openai package)
-            # client = openai.AsyncOpenAI(api_key=self.api_key)
-            # response = await client.chat.completions.create(
-            #     model="gpt-4o-mini",
-            #     messages=[
-            #         {"role": "system", "content": "You are an expert, friendly agricultural advisor."},
-            #         {"role": "user", "content": prompt}
-            #     ],
-            #     temperature=0.7,
-            #     max_tokens=250
-            # )
-            # return response.choices[0].message.content.strip()
-            
-            # Simulated await to mirror async behavior
-            await asyncio.sleep(0.5) 
-            return "Namaste! (OpenAI API key detected, but actual openai package call is mocked for safety in this template). " + prompt
+            # Live Groq API Call
+            response = await self.client.chat.completions.create(
+                model="llama3-8b-8192", # Extremely fast Groq model suitable for advice
+                messages=[
+                    {"role": "system", "content": "You are an expert, friendly agricultural advisor."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7,
+                max_tokens=250
+            )
+            return response.choices[0].message.content.strip()
             
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"LLM Error: {str(e)}")

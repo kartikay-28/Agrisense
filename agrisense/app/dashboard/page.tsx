@@ -91,9 +91,11 @@ export default function Dashboard() {
         </section>
 
         {error && (
-          <div className="bg-[#FDFAF4] border-l-[3px] border-[#7A3B2E] p-[14px_18px] text-[#7A3B2E] font-medium text-[13px]">
-            {error}
-          </div>
+          <ErrorMessage 
+            message={error} 
+            onRetry={fetchDashboardData} 
+            className="w-full"
+          />
         )}
 
         {/* Season Progress */}

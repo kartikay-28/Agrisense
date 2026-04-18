@@ -1,16 +1,19 @@
-fastapi==0.111.0
-uvicorn[standard]==0.29.0
-sqlalchemy==2.0.30
-psycopg2-binary==2.9.9
-alembic==1.13.1
-python-jose[cryptography]==3.3.0
-passlib[bcrypt]==1.7.4
-python-multipart==0.0.9
-httpx==0.27.0
-apscheduler==3.10.4
-scikit-learn==1.4.2
-pandas==2.2.2
-numpy==1.26.4
-joblib==1.4.2
-python-dotenv==1.0.1
-requests==2.31.0
+# ==============================================================================
+# AgriSense Backend Dependencies
+# ==============================================================================
+
+# Core Framework & Server
+fastapi>=0.104.1            # Modern, fast API framework
+uvicorn>=0.24.0             # ASGI web server implementation
+python-dotenv>=1.0.0        # Environment variable loader
+pydantic>=2.5.3             # Data validation and settings management
+
+# Data Science & Machine Learning Core
+pandas>=2.1.4               # Data manipulation and analysis
+numpy>=1.26.2               # Core array computing
+scikit-learn>=1.3.2         # Machine learning tools
+joblib>=1.3.2               # Pipeline and model persistence (saving/loading models)
+
+# External API Integrations (Optional/Required for AI and Weather)
+httpx>=0.25.2               # Next generation HTTP client for Python
+groq>=0.4.2                 # Groq Python API library for lightning-fast LLM insights
