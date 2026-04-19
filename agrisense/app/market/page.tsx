@@ -8,27 +8,33 @@ import ErrorMessage from "@/components/ui/ErrorMessage";
 import EmptyState from "@/components/ui/EmptyState";
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { TrendingUp, TrendingDown, Activity, ChevronDown } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function MarketIntelligence() {
-  const [activeCrop, setActiveCrop] = useState("Wheat");
+  const { user } = useAuth();
+  const [activeCrop, setActiveCrop] = useState(user.crop || "Wheat");
   const [marketData, setMarketData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const crops = ["Wheat", "Rice", "Maize", "Tomato", "Potato"];
+  const crops = ["Wheat", "Rice", "Maize", "Tomato", "Potato", "Soybean", "Cotton", "Sugarcane"];
+
+  useEffect(() => {
+    setActiveCrop(user.crop);
+  }, [user.crop]);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await getMarketData(activeCrop);
+        const res = await getMarketData(activeCrop, user.location);
         
         // Check if response has data or error message
-        if (res?.message && res?.recent_prices?.length === 0) {
+        if (res?.is_missing_data || (res?.message && res?.recent_prices?.length === 0)) {
           // No data found for this crop
           setMarketData(null);
-          setError(res.message);
+          setError(res?.message || `Market data not available for ${activeCrop} right now.`);
         } else {
           // Map backend response
           const data = res?.data && Array.isArray(res.data) ? res.data[0] : res;
@@ -44,19 +50,21 @@ export default function MarketIntelligence() {
       }
     };
     fetchData();
-  }, [activeCrop]);
+  }, [activeCrop, user.location]);
 
   // Mocking 30-day and 7-day trend data for visual richness based on current price if API omits it
   const generateTrendData = (basePrice: number, days: number, volatility: number) => {
     return Array.from({ length: days }).map((_, i) => ({
-      day: `Day ${i + 1}`,
+      date: `Day ${i + 1}`,
       price: Math.round(basePrice + (Math.random() * volatility - volatility / 2)),
     }));
   };
 
-  const basePrice = marketData?.price_inr || marketData?.price || 2275;
-  const recent30Days = marketData?.recent_prices || generateTrendData(basePrice, 30, 100);
-  const recent7Days = marketData?.recent_prices?.slice(-7) || generateTrendData(basePrice, 7, 50);
+  const basePrice = marketData?.current_price || marketData?.price_inr || marketData?.price || 2275;
+  const recent30Days = marketData?.recent_prices && marketData.recent_prices.length > 0 
+    ? marketData.recent_prices 
+    : generateTrendData(basePrice, 30, 100);
+  const recent7Days = recent30Days.slice(-7);
 
   return (
     <ProtectedRoute>
@@ -96,6 +104,7 @@ export default function MarketIntelligence() {
         )}
 
         {/* Main Dashboard Body */}
+        {!error && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main 30-Day Chart */}
           <div className="lg:col-span-2 bg-white border-[0.5px] border-[#D9CEB8] rounded-[16px] p-6 shadow-sm">
@@ -121,11 +130,12 @@ export default function MarketIntelligence() {
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E8DFC9" />
-                    <XAxis dataKey="day" hide />
+                    <XAxis dataKey="date" hide />
                     <YAxis domain={['auto', 'auto']} tick={{fill: '#7A6A55', fontSize: 12}} axisLine={false} tickLine={false} />
                     <Tooltip 
                       contentStyle={{ backgroundColor: '#2C2416', color: '#fff', borderRadius: '8px', border: 'none' }}
                       itemStyle={{ color: '#DDE8D9' }}
+                      labelStyle={{ color: '#A89E89', fontSize: '11px', marginBottom: '4px', display: 'block' }}
                     />
                     <Area type="monotone" dataKey="price" stroke="#5C7A52" strokeWidth={3} fillOpacity={1} fill="url(#colorPrice)" />
                   </AreaChart>
@@ -160,7 +170,12 @@ export default function MarketIntelligence() {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={recent7Days}>
                       <Bar dataKey="price" fill="#C9A97A" radius={[4, 4, 0, 0]} />
-                      <Tooltip cursor={{fill: 'transparent'}} />
+                      <Tooltip 
+                        cursor={{fill: 'transparent'}} 
+                        contentStyle={{ backgroundColor: '#2C2416', color: '#fff', borderRadius: '4px', border: 'none', padding: '4px 8px', fontSize: '12px' }}
+                        itemStyle={{ color: '#DDE8D9' }}
+                        labelStyle={{ display: 'none' }}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 )}
@@ -193,6 +208,7 @@ export default function MarketIntelligence() {
             </div>
           </div>
         </div>
+        )}
       </div>
     </ProtectedRoute>
   );

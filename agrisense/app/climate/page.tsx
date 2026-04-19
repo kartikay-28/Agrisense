@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Climate() {
+  const { user } = useAuth();
+  
   const days = [
     { name: "Mon", temp: "22-29°", rain: "Low rain", risk: "Low", rLabel: "bg-[#DDE8D9] text-[#3A5E32]" },
     { name: "Tue", temp: "23-31°", rain: "Dry", risk: "Moderate", rLabel: "bg-[#F0E4CC] text-[#B07A3A]" },
@@ -95,7 +100,7 @@ export default function Climate() {
           Irrigation recommendation
         </h3>
         <p className="font-body text-[14px] text-[#4A2418] leading-[1.6]">
-          Based on the dry forecast, irrigate your wheat field on Tuesday and Friday this week. Estimated water needed: 18mm per session.
+          Based on the dry forecast, irrigate your {user.crop.toLowerCase()} field on Tuesday and Friday this week. Estimated water needed: 18mm per session.
         </p>
       </section>
 
@@ -106,7 +111,7 @@ export default function Climate() {
         </h2>
         <div className="font-body font-light text-[13px] text-[#2C2416] leading-[1.8] flex flex-col gap-4">
           <p>
-            The upcoming heat wave on Wednesday and Thursday (reaching 34°) coincides with the early growing phase of your maize. This heat stress can limit early root development unless soil moisture is actively maintained.
+            The upcoming heat wave on Wednesday and Thursday (reaching 34°) coincides with the early growing phase of your {user.crop.toLowerCase()}. This heat stress can limit early root development unless soil moisture is actively maintained.
           </p>
           <p>
             With the moderate rain expected on Friday, we recommend holding off on heavy secondary fertilization until after the showers pass, ensuring nutrients aren&apos;t washed away prematurely.
@@ -117,7 +122,7 @@ export default function Climate() {
       {/* Historical Context */}
       <section className="border-t-[0.5px] border-[#E8DFC9] pt-6 flex justify-center text-center">
         <p className="font-body italic font-light text-[13px] text-[#7A6A55] max-w-[600px]">
-          Rainfall this month is 34% below the 10-year average for your region. Similar patterns in 2019 and 2021 led to 8–12% yield reduction without immediate irrigation.
+          Rainfall this month is 34% below the 10-year average for {user.location}. Similar patterns in 2019 and 2021 led to 8–12% yield reduction without immediate irrigation.
         </p>
       </section>
     </div>
