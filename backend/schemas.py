@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 
 class PricePoint(BaseModel):
     """Schema for individual data points in sparklines/charts"""
@@ -18,9 +18,8 @@ class MarketDataResponse(BaseModel):
     rolling_avg_30d: float = Field(..., description="30-Day Smoothed Rolling Average")
     volatility_7d: float = Field(..., description="Price volatility (standard deviation) over the last 7 days")
     recent_prices: List[PricePoint] = Field(..., description="Array of up to 30 recent prices for UI sparklines")
-    last_updated: str = Field(..., description="The date of the most recent price record")
-
-from typing import Optional
+    last_updated: Optional[str] = Field(None, description="The date of the most recent price record")
+    message: Optional[str] = Field(None, description="Optional system message")
 
 # --- Yield Prediction Schemas (3.3) ---
 class YieldPredictRequest(BaseModel):
@@ -48,6 +47,14 @@ class ClimateRiskResponse(BaseModel):
     irrigation_advice: str
 
 # --- LLM Insight Schemas (3.5) ---
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+class ChatRequest(BaseModel):
+    message: str
+    history: List[ChatMessage] = []
+
 class InsightRequest(BaseModel):
     crop: str
     predicted_yield: float
@@ -57,14 +64,6 @@ class InsightRequest(BaseModel):
 
 class InsightResponse(BaseModel):
     insight_text: str
-
-class ChatMessage(BaseModel):
-    role: str
-    content: str
-
-class ChatRequest(BaseModel):
-    message: str
-    history: List[ChatMessage] = []
 
 class ChatResponse(BaseModel):
     reply: str

@@ -1,20 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { useAuth } from "@/context/AuthContext";
 
-const CROPS = ["Wheat", "Rice", "Maize", "Soybean", "Cotton", "Sugarcane"];
+const CROPS = ["Wheat", "Rice", "Maize", "Soybean", "Cotton", "Sugarcane", "Tomato", "Potato"];
 const STATES = ["Punjab", "Haryana", "Uttar Pradesh", "Maharashtra", "Rajasthan", "Madhya Pradesh"];
 
 export default function Profile() {
-  const [name, setName] = useState("Rajan Kumar");
-  const [state, setState] = useState("Punjab");
-  const [crop, setCrop] = useState("Wheat");
-  const [acres, setAcres] = useState("7.1");
-  const [season, setSeason] = useState("Rabi");
+  const { user, updateProfile } = useAuth();
+  
+  const [name, setName] = useState(user.name);
+  const [location, setLocation] = useState(user.location);
+  const [crop, setCrop] = useState(user.crop);
+  const [acres, setAcres] = useState(user.acres.toString());
+  const [season, setSeason] = useState(user.season);
   const [saved, setSaved] = useState(false);
 
+  useEffect(() => {
+    setName(user.name);
+    setLocation(user.location);
+    setCrop(user.crop);
+    setAcres(user.acres.toString());
+    setSeason(user.season);
+  }, [user]);
+
   const handleSave = () => {
+    updateProfile({
+      name,
+      location,
+      crop,
+      acres: parseFloat(acres) || 0,
+      season
+    });
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };
@@ -37,12 +55,12 @@ export default function Profile() {
 
         {/* Avatar + Name Row */}
         <div className="flex items-center gap-5">
-          <div className="w-[56px] h-[56px] rounded-full bg-[#DDE8D9] flex items-center justify-center text-[#3A5E32] font-display font-semibold text-[22px] select-none">
+          <div className="w-[56px] h-[56px] rounded-full bg-[#DDE8D9] flex items-center justify-center text-[#3A5E32] font-display font-semibold text-[22px] select-none uppercase">
             {name.charAt(0)}
           </div>
           <div className="flex flex-col gap-0.5">
             <span className="font-display font-semibold text-[18px] text-[#2C2416]">{name}</span>
-            <span className="font-body text-[12px] text-[#7A6A55]">{state} · {crop} farmer</span>
+            <span className="font-body text-[12px] text-[#7A6A55]">{location} · {crop} farmer</span>
           </div>
         </div>
 
@@ -62,13 +80,13 @@ export default function Profile() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="font-body text-[11px] uppercase tracking-[0.1em] text-[#7A6A55] font-medium">State</label>
+              <label className="font-body text-[11px] uppercase tracking-[0.1em] text-[#7A6A55] font-medium">State / Location</label>
               <select
-                value={state}
-                onChange={(e) => setState(e.target.value)}
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
                 className="h-[40px] bg-[#F5F1EA] border-[0.5px] border-[#D9CEB8] rounded-[8px] px-[14px] font-body text-[13px] text-[#2C2416] focus:outline-none focus:border-[#7A3B2E] appearance-none"
               >
-                {STATES.map((s) => <option key={s}>{s}</option>)}
+                {STATES.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
 
@@ -79,7 +97,7 @@ export default function Profile() {
                 onChange={(e) => setCrop(e.target.value)}
                 className="h-[40px] bg-[#F5F1EA] border-[0.5px] border-[#D9CEB8] rounded-[8px] px-[14px] font-body text-[13px] text-[#2C2416] focus:outline-none focus:border-[#7A3B2E] appearance-none"
               >
-                {CROPS.map((c) => <option key={c}>{c}</option>)}
+                {CROPS.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
 
@@ -102,9 +120,9 @@ export default function Profile() {
                 onChange={(e) => setSeason(e.target.value)}
                 className="h-[40px] bg-[#F5F1EA] border-[0.5px] border-[#D9CEB8] rounded-[8px] px-[14px] font-body text-[13px] text-[#2C2416] focus:outline-none focus:border-[#7A3B2E] appearance-none"
               >
-                <option>Rabi</option>
-                <option>Kharif</option>
-                <option>Zaid</option>
+                <option value="Rabi">Rabi</option>
+                <option value="Kharif">Kharif</option>
+                <option value="Zaid">Zaid</option>
               </select>
             </div>
           </div>
@@ -118,7 +136,7 @@ export default function Profile() {
               { label: "Crop", value: crop },
               { label: "Area", value: `${acres} ac` },
               { label: "Season", value: season },
-              { label: "Region", value: state },
+              { label: "Region", value: location },
             ].map((item) => (
               <div key={item.label} className="flex flex-col gap-1">
                 <span className="font-body text-[10px] uppercase tracking-[0.1em] text-[#7A6A55] font-medium">{item.label}</span>

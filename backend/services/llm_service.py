@@ -1,7 +1,11 @@
+from dotenv import load_dotenv
 import os
 import asyncio
 from fastapi import HTTPException
 from groq import AsyncGroq
+
+load_dotenv()
+load_dotenv(".env.local")
 
 class LLMService:
     """
@@ -39,7 +43,7 @@ Write a helpful 2-paragraph insight and practical advice for the farmer.
         try:
             # Live Groq API Call
             response = await self.client.chat.completions.create(
-                model="llama3-8b-8192", # Extremely fast Groq model suitable for advice
+                model="llama-3.3-70b-versatile", # Advanced Groq model
                 messages=[
                     {"role": "system", "content": "You are an expert, friendly agricultural advisor."},
                     {"role": "user", "content": prompt}
@@ -70,7 +74,7 @@ Write a helpful 2-paragraph insight and practical advice for the farmer.
 
         try:
             response = await self.client.chat.completions.create(
-                model="llama3-8b-8192",
+                model="llama-3.3-70b-versatile",
                 messages=messages,
                 temperature=0.7,
                 max_tokens=300

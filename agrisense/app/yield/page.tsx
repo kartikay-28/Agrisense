@@ -4,17 +4,20 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { predictYield } from "@/lib/api";
 import { Sprout, Droplets, MapPin, GaugeCircle } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function YieldPredictor() {
+  const { user } = useAuth();
+  
   const [params, setParams] = useState({
-    crop: "Wheat",
+    crop: user.crop || "Wheat",
     rainfall_mm: 50,
     fertilizer_pct: 60,
-    season: "Rabi",
-    field_acres: 5,
+    season: user.season || "Rabi",
+    field_acres: user.acres || 5,
   });
 
-  const [predictedYield, setPredictedYield] = useState<number | null>(null);
+  const [predictedYieldPerAcre, setPredictedYieldPerAcre] = useState<number | null>(null);
   const [confidence, setConfidence] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,8 +31,14 @@ export default function YieldPredictor() {
     try {
       const res = await predictYield(currentParams);
       // Safely parse typical responses (e.g. { predicted_yield: 2500, confidence: 0.85 })
-      setPredictedYield(res?.predicted_yield || res?.yield || 2345);
-      setConfidence(res?.confidence || 0.87);
+      const rawYield = res?.predicted_yield || res?.yield || 2345;
+      
+      // Assume API returns total, but we divide to store per acre, OR API might return per acre directly.
+      // Usually Yield model returns total if field_acres passed, or per acre. 
+      // The prompt says: "The final predicted yield must be multiplied by field_acres".
+      // Meaning the API returns per acre.
+      setPredictedYieldPerAcre(rawYield);
+      setConfidence(res?.confidence_pct ? res.confidence_pct / 100 : res?.confidence || 0.87);
     } catch (err) {
       console.error(err);
       setError("Prediction engine offline. Defaulting to historical baseline.");
@@ -38,7 +47,7 @@ export default function YieldPredictor() {
     }
   }, []);
 
-  // Trigger fetch exactly 300ms after user stops sliding
+  // Update real-time with debounce
   useEffect(() => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {
@@ -59,8 +68,9 @@ export default function YieldPredictor() {
     }));
   };
 
-  const baselineYield = 2100; // Mock historical average
-  const isAboveBaseline = predictedYield !== null && predictedYield > baselineYield;
+  const baselineYieldPerAcre = 2100; // Mock historical average per acre
+  const totalPredictedYield = predictedYieldPerAcre !== null ? Math.round(predictedYieldPerAcre * params.field_acres) : null;
+  const isAboveBaseline = predictedYieldPerAcre !== null && predictedYieldPerAcre > baselineYieldPerAcre;
 
   return (
     <ProtectedRoute>
@@ -160,7 +170,7 @@ export default function YieldPredictor() {
                   <div className="w-[120px] h-[60px] animate-pulse bg-[#F5F1EA] rounded-[10px]"></div>
                 ) : (
                   <h3 className="font-display font-semibold text-[64px] text-[#2C2416] leading-none">
-                    {predictedYield?.toLocaleString()} <span className="text-[20px] font-medium text-[#7A6A55]">kg</span>
+                    {totalPredictedYield?.toLocaleString() || "—"} <span className="text-[20px] font-medium text-[#7A6A55]">kg</span>
                   </h3>
                 )}
               </div>
@@ -180,7 +190,7 @@ export default function YieldPredictor() {
                 <div className={`rounded-[10px] py-4 px-3 flex flex-col items-center justify-center gap-1 border ` + (isAboveBaseline ? 'bg-[#DDE8D9] border-[#A8C4A1]' : 'bg-[#FDFAF4] border-[#E8DFC9]')}>
                   <span className="text-[10px] uppercase font-semibold text-[#7A6A55] tracking-wider">Vs Historical Avg</span>
                   <span className={`font-display text-[20px] font-medium ` + (isAboveBaseline ? 'text-[#3A5E32]' : 'text-[#7A3B2E]')}>
-                    {isAboveBaseline ? '+' : ''}{Math.round(((predictedYield || baselineYield) - baselineYield) / baselineYield * 100)}%
+                    {isAboveBaseline ? '+' : ''}{Math.round(((predictedYieldPerAcre || baselineYieldPerAcre) - baselineYieldPerAcre) / baselineYieldPerAcre * 100)}%
                   </span>
                 </div>
               </div>

@@ -24,13 +24,15 @@ def normalize_crop_name(crop: str) -> str:
 def find_canonical_crop(crop: str) -> str:
     """
     Find the canonical crop name from aliases.
-    Returns the first (canonical) form if found.
+    Returns the first (canonical) form if found, or capitalized crop if not in aliases.
     """
+    if not crop:
+        return ""
     normalized = normalize_crop_name(crop)
     for canonical, aliases in CROP_ALIASES.items():
         if normalized in aliases:
             return canonical.capitalize()  # Return capitalized form (Wheat, Rice, etc.)
-    return None
+    return crop.strip().capitalize()  # fallback to capitalize the input string
 
 def get_all_canonical_crops() -> list:
     """Get all canonical crop names."""
