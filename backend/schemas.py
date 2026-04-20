@@ -54,6 +54,7 @@ class ChatMessage(BaseModel):
 class ChatRequest(BaseModel):
     message: str
     history: List[ChatMessage] = []
+    user_profile: Optional[dict] = None
 
 class InsightRequest(BaseModel):
     crop: str

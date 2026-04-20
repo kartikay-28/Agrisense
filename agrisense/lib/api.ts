@@ -132,10 +132,11 @@ export async function getLLMInsight(data: object) {
 
 /**
  * Send a chat message to the AI Advisor.
+ * Now intelligently passes user context directly to the backend.
  */
-export async function sendChatMessage(history: any[], message: string) {
+export async function sendChatMessage(history: any[], message: string, userProfile?: any) {
   return fetchWithHandler("/api/llm-insight", { 
     method: "POST",
-    body: JSON.stringify({ history, message }),
+    body: JSON.stringify({ history, message, user_profile: userProfile }),
   });
 }

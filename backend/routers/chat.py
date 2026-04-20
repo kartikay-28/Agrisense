@@ -12,6 +12,7 @@ async def chat_with_advisor(request: ChatRequest):
     """
     history_objs = getattr(request, 'history', [])
     message = request.message
+    user_profile = getattr(request, 'user_profile', None)
     
-    reply = await llm_service.chat(history=history_objs, message=message)
+    reply = await llm_service.chat(history=history_objs, message=message, user_profile=user_profile)
     return ChatResponse(reply=reply)

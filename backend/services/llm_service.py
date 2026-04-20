@@ -3,9 +3,26 @@ import os
 import asyncio
 from fastapi import HTTPException
 from groq import AsyncGroq
+from services.data_service import DataService
+from services.yield_service import yield_service
+from services.climate_service import climate_service
 
 load_dotenv()
 load_dotenv(".env.local")
+
+# FIXED: Default user mock profile for context injection
+MOCK_USER_PROFILE = {
+    "name": "Rajan",
+    "crop": "Wheat",
+    "season": "Rabi",
+    "location": "Punjab",
+    "acres": 12,
+    "soil_type": "Alluvial",
+    "rainfall": 120.0,
+    "fertilizer": 80.0
+}
+
+data_service = DataService()
 
 class LLMService:
     """
@@ -56,11 +73,53 @@ Write a helpful 2-paragraph insight and practical advice for the farmer.
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"LLM Error: {str(e)}")
 
-    async def chat(self, history: list, message: str) -> str:
+    async def chat(self, history: list, message: str, user_profile: dict = None) -> str:
         """
         Asynchronously handles conversational chat via the LLM API.
+        Includes rich context injection dynamically mapped from the user's authentic profile.
         """
-        messages = [{"role": "system", "content": "You are a helpful, expert AI agricultural advisor. Provide concise, friendly answers."}]
+        # If no profile was provided from frontend, fallback to MOCK_USER_PROFILE safely
+        profile = user_profile if user_profile else MOCK_USER_PROFILE
+        
+        try:
+            market_data = data_service.get_market_data(profile.get("crop", "Wheat"))
+            current_price = market_data.get("current_price", 0)
+            price_change_7d = market_data.get("price_change_7d_percent", 0)
+        except Exception:
+            current_price = 0
+            price_change_7d = 0
+            
+        try:
+            yield_data = yield_service.predict_yield(
+                crop=profile.get("crop", "Wheat"), 
+                rainfall=profile.get("rainfall", 100.0), 
+                fertilizer=profile.get("fertilizer", 50.0), 
+                season=profile.get("season", "Rabi"), 
+                soil_type=profile.get("soil_type", "Alluvial"), 
+                acres=profile.get("acres", 10)
+            )
+            predicted_yield = yield_data.get("predicted_yield", 0)
+        except Exception:
+            predicted_yield = 0
+            
+        try:
+            climate_data = climate_service.get_climate_risk(crop=profile.get("crop", "Wheat"))
+            climate_risk = climate_data.get("risk_level", "Medium")
+        except Exception:
+            climate_risk = "Medium"
+
+        system_prompt = f"""You are a helpful, expert AI agricultural advisor. Provide concise, friendly answers in simple, Hindi-friendly English.
+You are talking to {profile.get("name", "Farmer")}.
+Current farm profile:
+- Primary Crop: {profile.get("crop", "Unknown")}
+- Season: {profile.get("season", "Unknown")}
+- Current Market Price: ₹{current_price} ({price_change_7d}% in last 7 days)
+- Yield Prediction: {predicted_yield} quintals/acre
+- Climate Risk Level: {climate_risk}
+
+Always use this context to answer questions meaningfully. For example, if asked 'Should I sell my crops?', refer to the current price, recent price changes, and yield."""
+
+        messages = [{"role": "system", "content": system_prompt}]
         for msg in history[-5:]: # Only keep last 5 for context limit and safety
             if msg.role in ["user", "assistant"]:
                 messages.append({"role": msg.role, "content": msg.content})
