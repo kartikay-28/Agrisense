@@ -34,12 +34,13 @@ app = FastAPI(
 
 origins = [
     "http://localhost:3000",
-    "http://127.0.0.1:3000"
+    "http://127.0.0.1:3000",
+    "https://agrisensehub.vercel.app"
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,   # Explicitly allows the Next.js dev server
+    allow_origins=origins,   # Allowed Frontend URLs
     allow_credentials=True,
     allow_methods=["*"],     # Allows all HTTP methods (GET, POST, OPTIONS, etc.)
     allow_headers=["*"],     # Allows all headers (Authorization, Content-Type, etc.)
