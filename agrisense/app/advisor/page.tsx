@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { useAuth } from "@/context/AuthContext";
 import { sendChatMessage } from "@/lib/api";
 import { Send, Bot, User, Sparkles, AlertCircle } from "lucide-react";
 
@@ -11,10 +12,11 @@ type Message = {
 };
 
 export default function AIAdvisor() {
+  const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hello Rajan. I'm your AgriSense AI Advisor. How can I assist you with your farm operations today?",
+      content: `Hello ${user?.name || "Farmer"}. I'm your AgriSense AI Advisor. How can I assist you with your farm operations today?`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -48,8 +50,8 @@ export default function AIAdvisor() {
     setError(null);
 
     try {
-      // Pass the current message history to context to backend
-      const response = await sendChatMessage(newMessages, message);
+      // Pass the current message history and the dynamic user profile context to backend
+      const response = await sendChatMessage(newMessages, message, user);
       // Wait for the backend LLM engine response
       setMessages((prev) => [
         ...prev,

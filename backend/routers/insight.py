@@ -10,7 +10,8 @@ router = APIRouter(prefix="/api/llm-insight", tags=["AI Advisor"])
 async def process_llm_request(request: Union[ChatRequest, InsightRequest]):
     if isinstance(request, ChatRequest):
         history_objs = getattr(request, 'history', [])
-        reply = await llm_service.chat(history=history_objs, message=request.message)
+        user_profile = getattr(request, 'user_profile', None)
+        reply = await llm_service.chat(history=history_objs, message=request.message, user_profile=user_profile)
         return ChatResponse(reply=reply)
     else:
         context = {

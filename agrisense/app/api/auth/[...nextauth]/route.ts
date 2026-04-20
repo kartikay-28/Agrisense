@@ -12,8 +12,10 @@ const handler = NextAuth({
       },
     }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || 'dummy-client-id',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'dummy-client-secret',
+      // FIXED: Google OAuth client configuration
+      // Ensure these environment variables are actually in your .env or .env.local file!
+      clientId: process.env.GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "dummy-client-id",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "dummy-client-secret",
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-for-dev',

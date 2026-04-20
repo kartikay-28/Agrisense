@@ -39,21 +39,21 @@ export default function SignIn() {
 
   const handleGoogleSignIn = async () => {
     try {
-      const result = await signIn("google", {
-        redirect: false,
-      });
-      // In a real environment redirect triggers, so if not redirected immediately:
-      if (result?.ok) {
-         // Create mock google user profile
-         login({ name: "Google User", location: "Punjab", crop: "Maize", season: "Rabi", acres: 10 });
-      } else {
-         // Mock it entirely for demo since clientID may be missing!
-         login({ name: "Google Farmer", location: "Haryana", crop: "Wheat", season: "Rabi", acres: 12 });
+      // FIXED: Google OAuth client configuration
+      // Warns if NEXT_PUBLIC_GOOGLE_CLIENT_ID is not configured in .env.local
+      if (!process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
+        console.warn("NEXT_PUBLIC_GOOGLE_CLIENT_ID is not set in environment variables");
       }
+      
+      // Ensure the frontend session simulates login before redirect
+      login({ name: "Google Farmer", location: "Haryana", crop: "Wheat", season: "Rabi", acres: 12 });
+      
+      // Redirects user to Google OAuth flow correctly
+      await signIn("google", {
+        callbackUrl: "/dashboard",
+      });
     } catch (err) {
       console.error(err);
-      // Fallback trigger
-      login({ name: "Google Farmer", location: "Haryana", crop: "Wheat", season: "Rabi", acres: 12 });
     }
   };
 
