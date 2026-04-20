@@ -14,8 +14,8 @@ class DataService:
     """
     def __init__(self):
         self.df = None
-        # Path resolution: Navigate up from services -> backend -> root -> data/processed
-        self.data_path = Path(__file__).resolve().parent.parent.parent / "data" / "processed" / "agrisense_features.csv"
+        # Path resolution: Navigate up from services -> backend -> data/processed
+        self.data_path = Path(__file__).resolve().parent.parent / "data" / "processed" / "agrisense_features.csv"
 
     def _load_data(self):
         """Loads and caches the dataframe in memory for lightning-fast queries."""

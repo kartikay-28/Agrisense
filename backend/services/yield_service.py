@@ -10,8 +10,8 @@ class YieldService:
     """
     def __init__(self):
         self.model = None
-        # Resolving path to models/yield_predictor.pkl
-        self.model_path = Path(__file__).resolve().parent.parent.parent / "models" / "yield_predictor.pkl"
+        # Resolving path directly to backend/models/yield_predictor.pkl
+        self.model_path = Path(__file__).resolve().parent.parent / "models" / "yield_predictor.pkl"
         self._load_model()
         
         # Base historical averages for fallback/context
