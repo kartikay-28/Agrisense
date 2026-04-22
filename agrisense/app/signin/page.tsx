@@ -5,9 +5,11 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { signIn } from "next-auth/react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function SignIn() {
   const { login, isAuthenticated } = useAuth();
+  const { t } = useLanguage();
   const router = useRouter();
 
   useEffect(() => {
@@ -62,17 +64,17 @@ export default function SignIn() {
       <div className="bg-[#FDFAF4] border-[0.5px] border-[#D9CEB8] rounded-[16px] p-10 w-[90%] max-w-[400px] flex flex-col gap-6 shadow-sm">
         <div className="text-center flex flex-col gap-2">
           <h1 className="font-display font-semibold text-[28px] text-[#2C2416]">
-            Welcome back
+            {t("signin.welcome")}
           </h1>
           <p className="font-body text-[13px] text-[#7A6A55]">
-            Sign in to access your farm&apos;s intelligence.
+            {t("signin.subtitle")}
           </p>
         </div>
 
         <form className="flex flex-col gap-4 w-full" onSubmit={handleSignIn}>
           <div className="flex flex-col gap-1">
             <label className="font-body font-medium text-[11px] text-[#7A6A55] uppercase tracking-[0.1em]">
-              Email
+              {t("signin.email")}
             </label>
             <input
               type="email"
@@ -82,7 +84,7 @@ export default function SignIn() {
           </div>
           <div className="flex flex-col gap-1">
             <label className="font-body font-medium text-[11px] text-[#7A6A55] uppercase tracking-[0.1em]">
-              Password
+              {t("signin.password")}
             </label>
             <input
               type="password"
@@ -95,14 +97,14 @@ export default function SignIn() {
             type="submit"
             className="bg-[#7A3B2E] text-[#F5F0E8] w-full py-[12px] rounded-[24px] font-medium text-[14px] text-center mt-2 hover:bg-[#683025] transition-colors"
           >
-            Sign In
+            {t("signin.submit")}
           </button>
         </form>
 
         <div className="flex flex-col gap-4 mt-2">
           <div className="relative border-t-[0.5px] border-[#D9CEB8] w-full flex items-center justify-center">
             <span className="bg-[#FDFAF4] px-3 absolute text-[11px] text-[#7A6A55] uppercase tracking-[0.05em]">
-              Or
+              {t("signin.or")}
             </span>
           </div>
 
@@ -113,7 +115,7 @@ export default function SignIn() {
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
-            Continue with Google
+            {t("signin.google")}
           </button>
         </div>
       </div>
