@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { signOut } from "next-auth/react";
 
 export interface UserProfile {
   name: string;
@@ -47,7 +48,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    const authStatus = localStorage.getItem("agrisense_auth");
+    // Auth should only live for the active browser session.
+    const authStatus = sessionStorage.getItem("agrisense_auth");
     if (authStatus === "true") {
       setIsAuthenticated(true);
       const savedProfile = localStorage.getItem("agrisense_profile");
@@ -55,11 +57,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(JSON.parse(savedProfile));
       }
     }
+    // Clear any legacy persistent auth flag from older builds.
+    localStorage.removeItem("agrisense_auth");
     setIsLoading(false);
   }, []);
 
   const login = (profile?: Partial<UserProfile>) => {
-    localStorage.setItem("agrisense_auth", "true");
+    sessionStorage.setItem("agrisense_auth", "true");
     
     // Check if we already have a saved profile, if not use default + any passed fields
     let profileToSave = user;
@@ -82,10 +86,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
+    sessionStorage.removeItem("agrisense_auth");
     localStorage.removeItem("agrisense_auth");
     // We intentionally keep profile data in local storage so it's remembered next time,
     // or we could remove it. Let's keep it.
     setIsAuthenticated(false);
+    void signOut({ redirect: false });
     toast("You have been signed out", {
       style: { background: "#F5F1EA", color: "#7A6A55", border: "0.5px solid #D9CEB8" },
       className: "font-body",
