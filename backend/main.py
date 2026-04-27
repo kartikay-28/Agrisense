@@ -8,7 +8,6 @@ from routers.climate import router as climate_router
 from routers.insight import router as insight_router
 
 # ------------------------------------------------------------------
-# Load Environment Variables from .env file
 # ------------------------------------------------------------------
 load_dotenv()
 
