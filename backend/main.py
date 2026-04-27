@@ -9,7 +9,6 @@ from routers.insight import router as insight_router
 from routers.chat import router as chat_router
 
 # ------------------------------------------------------------------
-# Load Environment Variables from .env file
 # ------------------------------------------------------------------
 load_dotenv()
 
