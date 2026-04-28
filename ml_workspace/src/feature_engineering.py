@@ -1,11 +1,16 @@
 """
 Feature Engineering Module
-
+=========================
 This module provides functions for creating domain-specific features
-from agricultural data to improve model performance.
+from agricultural data to improve model performance in machine learning tasks.
+
+Usage:
+    Import and use the feature engineering functions to transform raw dataframes
+    before model training or inference.
 
 Author: AgriSense Team
 Date: April 2026
+Non-functional update: Expanded module docstring for clarity (April 2026).
 """
 
 import pandas as pd
