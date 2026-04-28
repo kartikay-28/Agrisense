@@ -1,1 +1,77 @@
-# S84-0426-AKM-Python-Pandas-NumPy-AgriSense
+# 🌱 AgriSense
+
+AgriSense is a full-stack agriculture intelligence platform that helps farmers and stakeholders make data-driven decisions using crop data, market trends, and climate insights.
+
+The project combines **Python-based data analysis (Pandas & NumPy)** with a **Next.js frontend** to deliver actionable agricultural insights.
+
+---
+
+## 🚀 Features
+
+### 📊 Data Analysis (Python)
+- Crop price analysis
+- Data cleaning and preprocessing
+- Risk scoring for agricultural decisions
+- Numerical computations using NumPy
+
+### 🌐 Web Application (Next.js)
+- Dashboard for insights
+- Market price tracking (Mandi/Market)
+- Climate data visualization
+- Farm profile management
+- Advisor section for recommendations
+
+### 🧠 Smart Insights
+- Risk scoring system (`risk_scoring.py`)
+- Data-driven recommendations
+- Integrated workflow demos
+
+## 🛠️ Tech Stack
+
+### Backend & Data Processing
+- Python
+- Pandas
+- NumPy
+
+### Frontend
+- Next.js
+- React
+- TypeScript
+- CSS
+
+## Project Structure -
+
+S84-0426-AKM-Python-Pandas-NumPy-AgriSense/
+│
+├── agrisense/                     # Main application folder
+│   │
+│   ├── app/                      # Next.js frontend pages
+│   │   ├── dashboard/            # Dashboard UI
+│   │   ├── market/               # Market price tracking
+│   │   ├── climate/              # Climate data views
+│   │   ├── profile/              # Farmer profile page
+│   │   └── advisor/              # Recommendations/advisory
+│   │
+│   ├── components/               # Reusable UI components
+│   ├── context/                  # Global state management
+│   │
+│   ├── backend/
+│   │   └── main.py               # Backend entry point
+│   │
+│   ├── data/                     # Datasets (crop, market, etc.)
+│   │
+│   ├── agrisense_functions.py    # Core data processing functions
+│   ├── risk_scoring.py           # Risk analysis logic
+│   ├── load_crop_prices.py       # Data loading utilities
+│   ├── example_workflow.py       # Example usage workflow
+│   ├── integration_demo.py       # End-to-end demo script
+│   │
+│   └── package.json              # Frontend dependencies
+│
+├── README.md                     # Project documentation
+└── requirements.txt              # Python dependencies (if added)
+
+## Contributions
+
+### Arman Singh
+Built out the Profile page (`/profile`) from a placeholder into a fully functional farm profile form. Includes editable fields for farmer name, state, primary crop, farm area, and current season — with a live farm summary card and save confirmation feedback.
