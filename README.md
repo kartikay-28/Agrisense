@@ -1,14 +1,30 @@
-# S84-0426-AKM-Python-Pandas-NumPy-AgriSense 🌱
+# 🌱 AgriSense
 
-AgriSense is a Next.js web application designed to help farmers make data-driven decisions. It provides insights into crop yield predictions, market prices, climate data, and overall farm management.
+AgriSense is a full-stack agriculture intelligence platform that helps farmers and stakeholders make data-driven decisions using crop data, market trends, and climate insights.
+
+The project combines **Python-based data analysis (Pandas & NumPy)** with a **Next.js frontend** to deliver actionable agricultural insights.
 
 ---
 
 ## 🚀 Features
-- Crop yield prediction insights
-- Market price tracking
-- Climate data monitoring
-- Farm management tools
+
+### 📊 Data Analysis (Python)
+- Crop price analysis
+- Data cleaning and preprocessing
+- Risk scoring for agricultural decisions
+- Numerical computations using NumPy
+
+### 🌐 Web Application (Next.js)
+- Dashboard for insights
+- Market price tracking (Mandi/Market)
+- Climate data visualization
+- Farm profile management
+- Advisor section for recommendations
+
+### 🧠 Smart Insights
+- Risk scoring system (`risk_scoring.py`)
+- Data-driven recommendations
+- Integrated workflow demos
 
 
 ## Contributions
