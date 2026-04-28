@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans } from "next/font/google";
-import { Toaster } from "sonner";
-import { AuthProvider } from "@/context/AuthContext";
+import { Providers } from "./providers";
 import "./globals.css";
 import NavigationBar from "@/components/NavigationBar";
 
@@ -33,13 +32,12 @@ export default function RootLayout({
       <body
         className={`${playfair.variable} ${dmSans.variable} antialiased`}
       >
-        <AuthProvider>
+        <Providers>
           <NavigationBar />
           <main className="max-w-[1100px] mx-auto px-5 md:px-[40px] pt-12 pb-24 min-h-screen">
             {children}
           </main>
-          <Toaster position="top-right" />
-        </AuthProvider>
+        </Providers>
       </body>
     </html>
   );
