@@ -26,6 +26,18 @@ The project combines **Python-based data analysis (Pandas & NumPy)** with a **Ne
 - Data-driven recommendations
 - Integrated workflow demos
 
+## 🛠️ Tech Stack
+
+### Backend & Data Processing
+- Python
+- Pandas
+- NumPy
+
+### Frontend
+- Next.js
+- React
+- TypeScript
+- CSS
 
 ## Contributions
 
