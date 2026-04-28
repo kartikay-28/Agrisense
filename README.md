@@ -39,6 +39,38 @@ The project combines **Python-based data analysis (Pandas & NumPy)** with a **Ne
 - TypeScript
 - CSS
 
+## Project Structure -
+
+S84-0426-AKM-Python-Pandas-NumPy-AgriSense/
+│
+├── agrisense/                     # Main application folder
+│   │
+│   ├── app/                      # Next.js frontend pages
+│   │   ├── dashboard/            # Dashboard UI
+│   │   ├── market/               # Market price tracking
+│   │   ├── climate/              # Climate data views
+│   │   ├── profile/              # Farmer profile page
+│   │   └── advisor/              # Recommendations/advisory
+│   │
+│   ├── components/               # Reusable UI components
+│   ├── context/                  # Global state management
+│   │
+│   ├── backend/
+│   │   └── main.py               # Backend entry point
+│   │
+│   ├── data/                     # Datasets (crop, market, etc.)
+│   │
+│   ├── agrisense_functions.py    # Core data processing functions
+│   ├── risk_scoring.py           # Risk analysis logic
+│   ├── load_crop_prices.py       # Data loading utilities
+│   ├── example_workflow.py       # Example usage workflow
+│   ├── integration_demo.py       # End-to-end demo script
+│   │
+│   └── package.json              # Frontend dependencies
+│
+├── README.md                     # Project documentation
+└── requirements.txt              # Python dependencies (if added)
+
 ## Contributions
 
 ### Arman Singh
