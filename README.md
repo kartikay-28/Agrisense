@@ -39,8 +39,9 @@ The project combines **Python-based data analysis (Pandas & NumPy)** with a **Ne
 - TypeScript
 - CSS
 
-## Project Structure -
+## 📂 Project Structure
 
+```bash
 S84-0426-AKM-Python-Pandas-NumPy-AgriSense/
 │
 ├── agrisense/                     # Main application folder
